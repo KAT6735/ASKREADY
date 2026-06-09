@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>ASKREADY</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <main class="app-shell">
+      <section class="top-panel" aria-labelledby="app-title">
+        <div>
+          <p class="eyebrow">ASKREADY</p>
+          <h1 id="app-title">Know what to ask before you choose.</h1>
+          <p class="intro">
+            Build a focused question list for your lender or realtor before the next call.
+          </p>
+        </div>
+      </section>
+
+      <section class="builder" aria-label="Question builder">
+        <form id="question-form" class="form-panel">
+          <fieldset>
+            <legend>Who are you talking to?</legend>
+            <div class="segmented-control">
+              <label>
+                <input type="radio" name="expert" value="lender" checked>
+                <span>Lender</span>
+              </label>
+              <label>
+                <input type="radio" name="expert" value="realtor">
+                <span>Realtor</span>
+              </label>
+            </div>
+          </fieldset>
+
+          <label class="field" for="stage">
+            <span>Where are you in the process?</span>
+            <select id="stage" name="stage">
+              <option value="just-starting">Just starting</option>
+              <option value="preapproved">Preapproved or almost there</option>
+              <option value="shopping">Actively looking at homes</option>
+              <option value="offer">Ready to make an offer</option>
+            </select>
+          </label>
+
+          <label class="field" for="priority">
+            <span>What matters most right now?</span>
+            <select id="priority" name="priority">
+              <option value="cost">Understanding total cost</option>
+              <option value="timeline">Knowing the timeline</option>
+              <option value="risk">Avoiding surprises</option>
+              <option value="confidence">Feeling confident before deciding</option>
+            </select>
+          </label>
+
+          <label class="field" for="concern">
+            <span>Anything specific on your mind?</span>
+            <textarea id="concern" name="concern" rows="4" placeholder="Example: I am worried about monthly payment, closing costs, inspection, or choosing the right area."></textarea>
+          </label>
+
+          <button class="primary-button" type="submit">Generate questions</button>
+        </form>
+
+        <aside class="results-panel" aria-live="polite">
+          <div class="results-header">
+            <div>
+              <p class="eyebrow">Your list</p>
+              <h2 id="result-title">Lender questions</h2>
+            </div>
+            <button id="copy-button" class="secondary-button" type="button">Copy</button>
+          </div>
+          <ol id="question-list" class="question-list"></ol>
+          <p id="copy-note" class="copy-note" role="status"></p>
+        </aside>
+      </section>
+    </main>
+
+    <script src="script.js"></script>
+  </body>
+</html>
