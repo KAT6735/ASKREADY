@@ -129,23 +129,19 @@
         background: #edf2f7;
       }
 
-      .segmented input {
-        position: absolute;
-        opacity: 0;
-      }
-
-      .segmented span {
-        display: block;
+      .language-button {
         min-height: 44px;
         padding: 12px 10px;
+        border: 0;
         border-radius: 6px;
+        background: transparent;
         color: var(--muted);
         text-align: center;
         font-weight: 700;
         cursor: pointer;
       }
 
-      .segmented input:checked + span {
+      .language-button.active {
         color: #ffffff;
         background: var(--green);
       }
@@ -275,25 +271,19 @@
           <fieldset>
             <legend>Output language</legend>
             <div class="segmented">
-              <label>
-                <input type="radio" name="language" value="english" checked>
-                <span>English</span>
-              </label>
-              <label>
-                <input type="radio" name="language" value="spanish">
-                <span>Spanish</span>
-              </label>
+              <button id="english-button" class="language-button active" type="button" data-language="english">English</button>
+              <button id="spanish-button" class="language-button" type="button" data-language="spanish">Spanish</button>
             </div>
           </fieldset>
 
           <label class="field" for="messy-question">
-            <span>Your messy question or idea</span>
+            <span id="messy-label">Your messy question or idea</span>
             <textarea id="messy-question" placeholder="Example: I need help writing something for my business but I do not know what to tell ChatGPT. I want it to sound warm, clear, and not too salesy."></textarea>
           </label>
 
           <div class="inline-fields">
             <label class="field" for="goal">
-              <span>What do you want back?</span>
+              <span id="goal-label">What do you want back?</span>
               <select id="goal">
                 <option value="answer">A helpful answer</option>
                 <option value="plan">A step-by-step plan</option>
@@ -304,7 +294,7 @@
             </label>
 
             <label class="field" for="tone">
-              <span>Tone</span>
+              <span id="tone-label">Tone</span>
               <select id="tone">
                 <option value="clear and friendly">Clear and friendly</option>
                 <option value="professional and concise">Professional and concise</option>
@@ -316,11 +306,11 @@
           </div>
 
           <label class="field" for="audience">
-            <span>Who is this for?</span>
+            <span id="audience-label">Who is this for?</span>
             <input id="audience" type="text" placeholder="Example: new customers, my Skool group, seniors learning AI, homebuyers">
           </label>
 
-          <button class="primary-button" type="submit">Make my prompt</button>
+          <button id="submit-button" class="primary-button" type="submit">Make my prompt</button>
           <p id="form-status" class="status" role="status"></p>
         </form>
 
@@ -350,10 +340,51 @@
         var formStatus = document.getElementById("form-status");
         var copyNote = document.getElementById("copy-note");
         var resultTitle = document.getElementById("result-title");
+        var messyLabel = document.getElementById("messy-label");
+        var goalLabelText = document.getElementById("goal-label");
+        var toneLabelText = document.getElementById("tone-label");
+        var audienceLabel = document.getElementById("audience-label");
+        var submitButton = document.getElementById("submit-button");
+        var language = "english";
+        var languageButtons = document.querySelectorAll(".language-button");
+
+        var interfaceText = {
+          english: {
+            messyLabel: "Your messy question or idea",
+            messyPlaceholder: "Example: I need help writing something for my business but I do not know what to tell ChatGPT. I want it to sound warm, clear, and not too salesy.",
+            goalLabel: "What do you want back?",
+            toneLabel: "Tone",
+            audienceLabel: "Who is this for?",
+            audiencePlaceholder: "Example: new customers, my Skool group, seniors learning AI, homebuyers",
+            submit: "Make my prompt",
+            copy: "Copy"
+          },
+          spanish: {
+            messyLabel: "Tu pregunta o idea desordenada",
+            messyPlaceholder: "Ejemplo: Necesito ayuda para escribir algo para mi negocio, pero no se que decirle a ChatGPT. Quiero que suene calido, claro y no demasiado vendedor.",
+            goalLabel: "Que quieres recibir?",
+            toneLabel: "Tono",
+            audienceLabel: "Para quien es esto?",
+            audiencePlaceholder: "Ejemplo: clientes nuevos, mi grupo de Skool, adultos aprendiendo IA, compradores de casa",
+            submit: "Crear mi prompt",
+            copy: "Copiar"
+          }
+        };
 
         function selectedLanguage() {
-          var selected = document.querySelector("input[name='language']:checked");
-          return selected ? selected.value : "english";
+          return language;
+        }
+
+        function updateInterfaceText() {
+          var text = interfaceText[language];
+          messyLabel.textContent = text.messyLabel;
+          messyQuestion.placeholder = text.messyPlaceholder;
+          goalLabelText.textContent = text.goalLabel;
+          toneLabelText.textContent = text.toneLabel;
+          audienceLabel.textContent = text.audienceLabel;
+          audience.placeholder = text.audiencePlaceholder;
+          submitButton.textContent = text.submit;
+          copyButton.textContent = text.copy;
         }
 
         function goalLabel(value, language) {
@@ -439,6 +470,17 @@
           renderPrompt(selectedLanguage() === "spanish" ? "Actualizado." : "Updated.");
         });
 
+        languageButtons.forEach(function (button) {
+          button.addEventListener("click", function () {
+            language = button.dataset.language;
+            languageButtons.forEach(function (item) {
+              item.classList.toggle("active", item === button);
+            });
+            updateInterfaceText();
+            renderPrompt(language === "spanish" ? "Español conectado." : "English connected.");
+          });
+        });
+
         copyButton.addEventListener("click", function () {
           navigator.clipboard.writeText(output.textContent).then(function () {
             copyNote.textContent = selectedLanguage() === "spanish" ? "Copiado." : "Copied.";
@@ -447,6 +489,7 @@
           });
         });
 
+        updateInterfaceText();
         renderPrompt("Prompt ready.");
       });
     </script>
