@@ -1,0 +1,497 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>ASKREADY</title>
+    <style>
+      :root {
+        color-scheme: light;
+        --ink: #1f2933;
+        --muted: #64748b;
+        --line: #d8dee8;
+        --panel: #ffffff;
+        --soft: #f4f7fb;
+        --green: #16745b;
+        --green-dark: #0f533f;
+        --blue: #2f62a3;
+        --amber: #b66b16;
+        --shadow: 0 18px 48px rgba(31, 41, 51, 0.12);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        font-family: Arial, Helvetica, sans-serif;
+        color: var(--ink);
+        background:
+          linear-gradient(125deg, rgba(22, 116, 91, 0.12), transparent 36%),
+          linear-gradient(230deg, rgba(47, 98, 163, 0.13), transparent 40%),
+          var(--soft);
+      }
+
+      button,
+      select,
+      textarea,
+      input {
+        font: inherit;
+      }
+
+      .app-shell {
+        width: min(1160px, calc(100% - 32px));
+        margin: 0 auto;
+        padding: 34px 0;
+      }
+
+      .hero {
+        min-height: 255px;
+        display: flex;
+        align-items: end;
+        padding: 34px;
+        border-radius: 8px;
+        color: #ffffff;
+        background:
+          linear-gradient(rgba(18, 29, 42, 0.52), rgba(18, 29, 42, 0.68)),
+          url("https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=1800&q=80") center/cover;
+        box-shadow: var(--shadow);
+      }
+
+      .eyebrow {
+        margin: 0 0 8px;
+        font-size: 0.78rem;
+        font-weight: 700;
+        letter-spacing: 0;
+        text-transform: uppercase;
+      }
+
+      h1,
+      h2,
+      p,
+      legend {
+        margin-top: 0;
+      }
+
+      h1 {
+        max-width: 800px;
+        margin-bottom: 12px;
+        font-size: clamp(2.3rem, 8vw, 4.7rem);
+        line-height: 0.96;
+        letter-spacing: 0;
+      }
+
+      .intro {
+        max-width: 680px;
+        margin-bottom: 0;
+        font-size: 1.1rem;
+        line-height: 1.55;
+      }
+
+      .workspace {
+        display: grid;
+        grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
+        gap: 18px;
+        margin-top: 18px;
+        align-items: start;
+      }
+
+      .panel {
+        padding: 22px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: var(--panel);
+        box-shadow: 0 8px 24px rgba(31, 41, 51, 0.07);
+      }
+
+      fieldset {
+        margin: 0 0 18px;
+        padding: 0;
+        border: 0;
+      }
+
+      legend,
+      .field > span {
+        display: block;
+        margin-bottom: 9px;
+        font-weight: 700;
+      }
+
+      .segmented {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+        padding: 4px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: #edf2f7;
+      }
+
+      .language-button {
+        min-height: 44px;
+        padding: 12px 10px;
+        border: 0;
+        border-radius: 6px;
+        background: transparent;
+        color: var(--muted);
+        text-align: center;
+        font-weight: 700;
+        cursor: pointer;
+      }
+
+      .language-button.active {
+        color: #ffffff;
+        background: var(--green);
+      }
+
+      .field {
+        display: block;
+        margin-bottom: 18px;
+      }
+
+      textarea,
+      select,
+      input[type="text"] {
+        width: 100%;
+        border: 1px solid var(--line);
+        border-radius: 6px;
+        color: var(--ink);
+        background: #ffffff;
+      }
+
+      textarea {
+        min-height: 165px;
+        padding: 12px;
+        line-height: 1.45;
+        resize: vertical;
+      }
+
+      select,
+      input[type="text"] {
+        min-height: 46px;
+        padding: 0 12px;
+      }
+
+      .inline-fields {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+      }
+
+      .primary-button,
+      .secondary-button {
+        min-height: 46px;
+        border: 0;
+        border-radius: 6px;
+        font-weight: 700;
+        cursor: pointer;
+      }
+
+      .primary-button {
+        width: 100%;
+        color: #ffffff;
+        background: var(--green);
+      }
+
+      .primary-button:hover,
+      .primary-button:focus-visible {
+        background: var(--green-dark);
+      }
+
+      .secondary-button {
+        padding: 0 18px;
+        color: var(--blue);
+        background: #eaf1fb;
+      }
+
+      .results-header {
+        display: flex;
+        gap: 12px;
+        align-items: start;
+        justify-content: space-between;
+        border-bottom: 1px solid var(--line);
+        padding-bottom: 16px;
+      }
+
+      .results-header h2 {
+        margin-bottom: 0;
+        font-size: 1.5rem;
+      }
+
+      .output-box {
+        margin: 18px 0 0;
+        padding: 18px;
+        min-height: 280px;
+        border-left: 4px solid var(--amber);
+        border-radius: 6px;
+        background: #fbfcfe;
+        white-space: pre-wrap;
+        line-height: 1.5;
+      }
+
+      .status {
+        min-height: 22px;
+        margin: 14px 0 0;
+        color: var(--green-dark);
+        font-weight: 700;
+      }
+
+      @media (max-width: 820px) {
+        .app-shell {
+          width: min(100% - 20px, 1160px);
+          padding: 10px 0 24px;
+        }
+
+        .hero {
+          min-height: 280px;
+          padding: 24px;
+        }
+
+        .workspace,
+        .inline-fields {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="app-shell">
+      <section class="hero" aria-labelledby="app-title">
+        <div>
+          <p class="eyebrow">ASKREADY</p>
+          <h1 id="app-title">Turn messy questions into smart AI prompts.</h1>
+          <p class="intro">For AI beginners who know what they mean, but need help asking the platform clearly.</p>
+        </div>
+      </section>
+
+      <section class="workspace" aria-label="Prompt builder">
+        <form id="prompt-form" class="panel">
+          <fieldset>
+            <legend>Output language</legend>
+            <div class="segmented">
+              <button id="english-button" class="language-button active" type="button" data-language="english">English</button>
+              <button id="spanish-button" class="language-button" type="button" data-language="spanish">Spanish</button>
+            </div>
+          </fieldset>
+
+          <label class="field" for="messy-question">
+            <span id="messy-label">Your messy question or idea</span>
+            <textarea id="messy-question" placeholder="Example: I need help writing something for my business but I do not know what to tell ChatGPT. I want it to sound warm, clear, and not too salesy."></textarea>
+          </label>
+
+          <div class="inline-fields">
+            <label class="field" for="goal">
+              <span id="goal-label">What do you want back?</span>
+              <select id="goal">
+                <option value="answer">A helpful answer</option>
+                <option value="plan">A step-by-step plan</option>
+                <option value="message">A message, email, or post</option>
+                <option value="ideas">Ideas or options</option>
+                <option value="edit">A cleaner version of my writing</option>
+              </select>
+            </label>
+
+            <label class="field" for="tone">
+              <span id="tone-label">Tone</span>
+              <select id="tone">
+                <option value="clear and friendly">Clear and friendly</option>
+                <option value="professional and concise">Professional and concise</option>
+                <option value="warm and encouraging">Warm and encouraging</option>
+                <option value="simple and beginner-friendly">Simple and beginner-friendly</option>
+                <option value="confident but not pushy">Confident but not pushy</option>
+              </select>
+            </label>
+          </div>
+
+          <label class="field" for="audience">
+            <span id="audience-label">Who is this for?</span>
+            <input id="audience" type="text" placeholder="Example: new customers, my Skool group, seniors learning AI, homebuyers">
+          </label>
+
+          <button id="submit-button" class="primary-button" type="submit">Make my prompt</button>
+          <p id="form-status" class="status" role="status"></p>
+        </form>
+
+        <aside class="panel" aria-live="polite">
+          <div class="results-header">
+            <div>
+              <p class="eyebrow">Smart prompt</p>
+              <h2 id="result-title">Ready to copy</h2>
+            </div>
+            <button id="copy-button" class="secondary-button" type="button">Copy</button>
+          </div>
+          <div id="prompt-output" class="output-box"></div>
+          <p id="copy-note" class="status" role="status"></p>
+        </aside>
+      </section>
+    </main>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        var form = document.getElementById("prompt-form");
+        var messyQuestion = document.getElementById("messy-question");
+        var goal = document.getElementById("goal");
+        var tone = document.getElementById("tone");
+        var audience = document.getElementById("audience");
+        var output = document.getElementById("prompt-output");
+        var copyButton = document.getElementById("copy-button");
+        var formStatus = document.getElementById("form-status");
+        var copyNote = document.getElementById("copy-note");
+        var resultTitle = document.getElementById("result-title");
+        var messyLabel = document.getElementById("messy-label");
+        var goalLabelText = document.getElementById("goal-label");
+        var toneLabelText = document.getElementById("tone-label");
+        var audienceLabel = document.getElementById("audience-label");
+        var submitButton = document.getElementById("submit-button");
+        var language = "english";
+        var languageButtons = document.querySelectorAll(".language-button");
+
+        var interfaceText = {
+          english: {
+            messyLabel: "Your messy question or idea",
+            messyPlaceholder: "Example: I need help writing something for my business but I do not know what to tell ChatGPT. I want it to sound warm, clear, and not too salesy.",
+            goalLabel: "What do you want back?",
+            toneLabel: "Tone",
+            audienceLabel: "Who is this for?",
+            audiencePlaceholder: "Example: new customers, my Skool group, seniors learning AI, homebuyers",
+            submit: "Make my prompt",
+            copy: "Copy"
+          },
+          spanish: {
+            messyLabel: "Tu pregunta o idea desordenada",
+            messyPlaceholder: "Ejemplo: Necesito ayuda para escribir algo para mi negocio, pero no se que decirle a ChatGPT. Quiero que suene calido, claro y no demasiado vendedor.",
+            goalLabel: "Que quieres recibir?",
+            toneLabel: "Tono",
+            audienceLabel: "Para quien es esto?",
+            audiencePlaceholder: "Ejemplo: clientes nuevos, mi grupo de Skool, adultos aprendiendo IA, compradores de casa",
+            submit: "Crear mi prompt",
+            copy: "Copiar"
+          }
+        };
+
+        function selectedLanguage() {
+          return language;
+        }
+
+        function updateInterfaceText() {
+          var text = interfaceText[language];
+          messyLabel.textContent = text.messyLabel;
+          messyQuestion.placeholder = text.messyPlaceholder;
+          goalLabelText.textContent = text.goalLabel;
+          toneLabelText.textContent = text.toneLabel;
+          audienceLabel.textContent = text.audienceLabel;
+          audience.placeholder = text.audiencePlaceholder;
+          submitButton.textContent = text.submit;
+          copyButton.textContent = text.copy;
+        }
+
+        function goalLabel(value, language) {
+          var labels = {
+            english: {
+              answer: "a helpful answer",
+              plan: "a step-by-step plan",
+              message: "a message, email, or post",
+              ideas: "ideas or options",
+              edit: "a cleaner version of my writing"
+            },
+            spanish: {
+              answer: "una respuesta util",
+              plan: "un plan paso a paso",
+              message: "un mensaje, correo electronico o publicacion",
+              ideas: "ideas u opciones",
+              edit: "una version mas clara de mi escritura"
+            }
+          };
+          return labels[language][value] || labels[language].answer;
+        }
+
+        function toneLabel(value, language) {
+          if (language === "english") {
+            return value;
+          }
+
+          var labels = {
+            "clear and friendly": "claro y amable",
+            "professional and concise": "profesional y conciso",
+            "warm and encouraging": "calido y alentador",
+            "simple and beginner-friendly": "simple y facil para principiantes",
+            "confident but not pushy": "seguro pero no insistente"
+          };
+
+          return labels[value] || "claro y amable";
+        }
+
+        function buildEnglishPrompt() {
+          var raw = messyQuestion.value.trim();
+          var audienceText = audience.value.trim() || "someone who is new to this topic";
+          var ask = raw || "I am new to AI and need help turning my rough idea into a clear request.";
+
+          return "Act as a patient AI assistant for a beginner.\n\n" +
+            "My rough question or idea is:\n" +
+            ask + "\n\n" +
+            "Please turn this into " + goalLabel(goal.value, "english") + " for " + audienceText + ".\n\n" +
+            "Use a " + tone.value + " tone.\n\n" +
+            "Before answering, improve my request into a clear prompt. Then give me the answer using simple language. If anything important is missing, ask up to three short follow-up questions.";
+        }
+
+        function buildSpanishPrompt() {
+          var raw = messyQuestion.value.trim();
+          var audienceText = audience.value.trim() || "alguien que es principiante en este tema";
+          var ask = raw || "Soy principiante en inteligencia artificial y necesito ayuda para convertir mi idea en una solicitud clara.";
+
+          return "Actua como un asistente de inteligencia artificial paciente para principiantes.\n\n" +
+            "Mi pregunta o idea inicial es:\n" +
+            ask + "\n\n" +
+            "Convierte esto en " + goalLabel(goal.value, "spanish") + " para " + audienceText + ".\n\n" +
+            "Usa un tono " + toneLabel(tone.value, "spanish") + ".\n\n" +
+            "Antes de responder, mejora mi solicitud y conviertela en un prompt claro. Luego dame la respuesta en lenguaje sencillo. Si falta algo importante, haz hasta tres preguntas breves de seguimiento.";
+        }
+
+        function renderPrompt(message) {
+          var language = selectedLanguage();
+          output.textContent = language === "spanish" ? buildSpanishPrompt() : buildEnglishPrompt();
+          resultTitle.textContent = language === "spanish" ? "Listo para copiar" : "Ready to copy";
+          formStatus.textContent = message || "Prompt ready.";
+          copyNote.textContent = "";
+        }
+
+        form.addEventListener("submit", function (event) {
+          event.preventDefault();
+          renderPrompt(selectedLanguage() === "spanish" ? "Prompt creado." : "Prompt created.");
+        });
+
+        form.addEventListener("input", function () {
+          renderPrompt(selectedLanguage() === "spanish" ? "Actualizado." : "Updated.");
+        });
+
+        form.addEventListener("change", function () {
+          renderPrompt(selectedLanguage() === "spanish" ? "Actualizado." : "Updated.");
+        });
+
+        languageButtons.forEach(function (button) {
+          button.addEventListener("click", function () {
+            language = button.dataset.language;
+            languageButtons.forEach(function (item) {
+              item.classList.toggle("active", item === button);
+            });
+            updateInterfaceText();
+            renderPrompt(language === "spanish" ? "Español conectado." : "English connected.");
+          });
+        });
+
+        copyButton.addEventListener("click", function () {
+          navigator.clipboard.writeText(output.textContent).then(function () {
+            copyNote.textContent = selectedLanguage() === "spanish" ? "Copiado." : "Copied.";
+          }).catch(function () {
+            copyNote.textContent = selectedLanguage() === "spanish" ? "Selecciona el texto y copialo manualmente." : "Select the text and copy it manually.";
+          });
+        });
+
+        updateInterfaceText();
+        renderPrompt("Prompt ready.");
+      });
+    </script>
+  </body>
+</html>
